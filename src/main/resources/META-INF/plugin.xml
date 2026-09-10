@@ -1,19 +1,41 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.paohaijiao.jquickjavaplugin</id>
-    <name>jquick-java-plugin</name>
-    <vendor>paohaijiao</vendor>
+    <name>JQuick Java Language Support</name>
+    <vendor email="paohaijiao@github.com" url="https://github.com/paohaijiao">paohaijiao</vendor>
+
     <description><![CDATA[
-        <p><b>jquick-java-plugin</b> is a repository that provides a pure template to make it easier to create a new plugin project.</p>
-        <p>The main goal of this template is to speed up the setup phase of plugin development for both new and experienced developers by preconfiguring the project scaffold and CI, linking to the proper documentation pages, and keeping everything organized.</p>
+        <p><b>JQuick Java Language Support</b> — 面向 jquick-java 规则脚本（<code>.jquick</code>）的 IntelliJ 插件。</p>
+        <p>复用 jquick-java 内置的 ANTLR4 引擎，在 IDE 内直接提供：</p>
+        <ul>
+            <li><b>语法高亮</b>（Syntax Highlighting）：关键字 / 字符串 / 数字 / 注释 / 运算符 / 括号等分组着色；</li>
+            <li><b>语法查错</b>（Syntax Checking）：实时把词法 / 语法错误以红色波浪线标注在编辑器上；</li>
+            <li><b>代码补全</b>（Code Completion）：提示关键字、内置类型，并复用引擎收集本文件内定义的函数 / 变量 / 参数 / import 别名；</li>
+        </ul>
+        <p>不需要启动额外的 Language Server 进程，Community / Ultimate 通用。</p>
+        <br/>
+        <p><b>English:</b> IntelliJ support for jquick-java rule scripts (<code>.jquick</code>),
+        reusing the built-in ANTLR4 engine of jquick-java. Provides token-level syntax highlighting,
+        real-time syntax diagnostics rendered as error squiggles, and code completion covering keywords,
+        built-in types plus functions / variables / parameters / import aliases defined in the current file.
+        No external language-server process required; works on both Community and Ultimate editions.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.paohaijiao.jquickjavaplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.paohaijiao.jquickjavaplugin.startup.MyProjectActivity" />
+        <fileType name="JQuick"
+                  language="JQuick"
+                  extensions="jquick"
+                  implementationClass="com.github.paohaijiao.jquickjavaplugin.lang.JQuickFileType"
+                  fieldName="INSTANCE"/>
+        <lang.parserDefinition language="JQuick"
+                               implementationClass="com.github.paohaijiao.jquickjavaplugin.lang.JQuickParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="JQuick"
+                                       implementationClass="com.github.paohaijiao.jquickjavaplugin.highlighting.JQuickSyntaxHighlighterFactory"/>
+        <externalAnnotator language="JQuick"
+                           implementationClass="com.github.paohaijiao.jquickjavaplugin.annotator.JQuickSyntaxAnnotator"/>
+        <completion.contributor language="JQuick"
+                                implementationClass="com.github.paohaijiao.jquickjavaplugin.completion.JQuickCompletionContributor"/>
     </extensions>
 </idea-plugin>
