@@ -2,7 +2,6 @@ package com.github.paohaijiao.jquickjavaplugin.lang
 
 import com.intellij.lexer.Lexer
 import com.intellij.lexer.LexerPosition
-import com.intellij.lexer.LexerPositionImpl
 import com.intellij.psi.tree.IElementType
 import com.github.paohaijiao.parser.JQuickJavaLexer
 import org.antlr.v4.runtime.CharStreams
@@ -84,8 +83,13 @@ class JQuickAntlrLexer : Lexer() {
     override fun getState(): Int = 0
 
     override fun getCurrentPosition(): LexerPosition {
+        // 记录当前 token 的文本偏移（便于 IDE 对同一缓冲做行间恢复/增量推进）。
+        // 注意：这里自行实现 LexerPosition 而不用 LexerPositionImpl——后者在 2024.1 及更早版本中为包私有。
         val offset = if (currentIndex < tokenCount) getTokenStart() else myEndOffset
-        return LexerPositionImpl(offset, 0)
+        return object : LexerPosition {
+            override fun getOffset(): Int = offset
+            override fun getState(): Int = 0
+        }
     }
 
     override fun restore(position: LexerPosition) {
@@ -157,8 +161,12 @@ class JQuickAntlrLexer : Lexer() {
                 "STRING" -> return JQuickTokenTypes.STRING
                 "NUMBERIC", "DATE", "DATETIME" -> return JQuickTokenTypes.NUMBER
                 "WS", "NEWLINE" -> return JQuickTokenTypes.WHITE_SPACE
-                "LPAREN", "RPAREN" -> return JQuickTokenTypes.PARENS
-                "LBRACE", "RBRACE" -> return JQuickTokenTypes.BRACES
+                "LPAREN" -> return JQuickTokenTypes.LPAREN
+                "RPAREN" -> return JQuickTokenTypes.RPAREN
+                "LBRACE" -> return JQuickTokenTypes.LBRACE
+                "RBRACE" -> return JQuickTokenTypes.RBRACE
+                "LBRACKET" -> return JQuickTokenTypes.LBRACKET
+                "RBRACKET" -> return JQuickTokenTypes.RBRACKET
                 "SEMICOLON" -> return JQuickTokenTypes.SEMICOLON
                 "DOT" -> return JQuickTokenTypes.DOT
                 "COLON", "ASSIGN", "GT", "GE", "LT", "LE", "EQ", "NE",
@@ -177,18 +185,30 @@ class JQuickAntlrLexer : Lexer() {
     /** 匿名内联字面量（形如 'if'、'['、',' 等）的分组。 */
     private fun classifyLiteral(literal: String): IElementType? = when (literal) {
         "','" -> JQuickTokenTypes.COMMA
-        "'['", "']'" -> JQuickTokenTypes.BRACKETS
+        "'['" -> JQuickTokenTypes.LBRACKET
+        "']'" -> JQuickTokenTypes.RBRACKET
         "'@'" -> JQuickTokenTypes.OPERATOR
         "'.'" -> JQuickTokenTypes.DOT
         "';'" -> JQuickTokenTypes.SEMICOLON
-        "'('", "')'" -> JQuickTokenTypes.PARENS
-        "'{'", "'}'" -> JQuickTokenTypes.BRACES
+        "'('" -> JQuickTokenTypes.LPAREN
+        "')'" -> JQuickTokenTypes.RPAREN
+        "'{'" -> JQuickTokenTypes.LBRACE
+        "'}'" -> JQuickTokenTypes.RBRACE
         else -> if (literal in KEYWORD_LITERALS) JQuickTokenTypes.KEYWORD else null
     }
 
     /** 纯文本兜底分类（正常不会触发）。 */
     private fun classifyByText(text: String): IElementType = when (text) {
-        ";", ",", ".", "(", ")", "[", "]", "{", "}", "@" -> JQuickTokenTypes.OPERATOR
+        "(" -> JQuickTokenTypes.LPAREN
+        ")" -> JQuickTokenTypes.RPAREN
+        "{" -> JQuickTokenTypes.LBRACE
+        "}" -> JQuickTokenTypes.RBRACE
+        "[" -> JQuickTokenTypes.LBRACKET
+        "]" -> JQuickTokenTypes.RBRACKET
+        ";" -> JQuickTokenTypes.SEMICOLON
+        "," -> JQuickTokenTypes.COMMA
+        "." -> JQuickTokenTypes.DOT
+        "@" -> JQuickTokenTypes.OPERATOR
         else -> JQuickTokenTypes.IDENTIFIER
     }
 

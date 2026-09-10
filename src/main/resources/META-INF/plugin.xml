@@ -5,21 +5,21 @@
     <vendor email="paohaijiao@github.com" url="https://github.com/paohaijiao">paohaijiao</vendor>
 
     <description><![CDATA[
-        <p><b>JQuick Java Language Support</b> — 面向 jquick-java 规则脚本（<code>.jquick</code>）的 IntelliJ 插件。</p>
-        <p>复用 jquick-java 内置的 ANTLR4 引擎，在 IDE 内直接提供：</p>
-        <ul>
-            <li><b>语法高亮</b>（Syntax Highlighting）：关键字 / 字符串 / 数字 / 注释 / 运算符 / 括号等分组着色；</li>
-            <li><b>语法查错</b>（Syntax Checking）：实时把词法 / 语法错误以红色波浪线标注在编辑器上；</li>
-            <li><b>代码补全</b>（Code Completion）：提示关键字、内置类型，并复用引擎收集本文件内定义的函数 / 变量 / 参数 / import 别名；</li>
-        </ul>
-        <p>不需要启动额外的 Language Server 进程，Community / Ultimate 通用。</p>
-        <br/>
-        <p><b>English:</b> IntelliJ support for jquick-java rule scripts (<code>.jquick</code>),
-        reusing the built-in ANTLR4 engine of jquick-java. Provides token-level syntax highlighting,
-        real-time syntax diagnostics rendered as error squiggles, and code completion covering keywords,
-        built-in types plus functions / variables / parameters / import aliases defined in the current file.
-        No external language-server process required; works on both Community and Ultimate editions.</p>
-    ]]></description>
+    <p><b>JQuick Java Language Support</b> — IntelliJ support for jquick-java rule scripts (<code>.jquick</code>),
+    reusing the built-in ANTLR4 engine of jquick-java. Provides token-level syntax highlighting,
+    real-time syntax diagnostics rendered as error squiggles, code completion covering keywords,
+    built-in types plus functions / variables / parameters / import aliases defined in the current file,
+    and paired-bracket support with auto-closing brackets and matching highlight.
+    No external language-server process required; works on both Community and Ultimate editions.</p>
+    <p><b>中文：</b>面向 jquick-java 规则脚本（<code>.jquick</code>）的 IntelliJ 插件，
+    复用 jquick-java 内置的 ANTLR4 引擎，在 IDE 内直接提供：</p>
+    <ul>
+        <li><b>语法高亮</b>：关键字 / 字符串 / 数字 / 注释 / 运算符 / 括号等分组着色；</li>
+        <li><b>语法查错</b>：实时把词法 / 语法错误以红色波浪线标注在编辑器上；</li>
+        <li><b>代码补全</b>：提示关键字、内置类型，并复用引擎收集本文件内定义的函数 / 变量 / 参数 / import 别名；</li>
+        <li><b>括号配对</b>：输入 <code>(</code>、<code>{</code>、<code>[</code> 自动补右括号，并高亮配对括号。</li>
+    </ul>
+]]></description>
 
     <depends>com.intellij.modules.platform</depends>
 
@@ -29,13 +29,10 @@
                   extensions="jquick"
                   implementationClass="com.github.paohaijiao.jquickjavaplugin.lang.JQuickFileType"
                   fieldName="INSTANCE"/>
-        <lang.parserDefinition language="JQuick"
-                               implementationClass="com.github.paohaijiao.jquickjavaplugin.lang.JQuickParserDefinition"/>
-        <lang.syntaxHighlighterFactory language="JQuick"
-                                       implementationClass="com.github.paohaijiao.jquickjavaplugin.highlighting.JQuickSyntaxHighlighterFactory"/>
-        <externalAnnotator language="JQuick"
-                           implementationClass="com.github.paohaijiao.jquickjavaplugin.annotator.JQuickSyntaxAnnotator"/>
-        <completion.contributor language="JQuick"
-                                implementationClass="com.github.paohaijiao.jquickjavaplugin.completion.JQuickCompletionContributor"/>
+        <lang.parserDefinition language="JQuick" implementationClass="com.github.paohaijiao.jquickjavaplugin.lang.JQuickParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="JQuick" implementationClass="com.github.paohaijiao.jquickjavaplugin.highlighting.JQuickSyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="JQuick" implementationClass="com.github.paohaijiao.jquickjavaplugin.lang.JQuickPairedBraceMatcher"/>
+        <externalAnnotator language="JQuick" implementationClass="com.github.paohaijiao.jquickjavaplugin.annotator.JQuickSyntaxAnnotator"/>
+        <completion.contributor language="JQuick" implementationClass="com.github.paohaijiao.jquickjavaplugin.completion.JQuickCompletionContributor"/>
     </extensions>
 </idea-plugin>

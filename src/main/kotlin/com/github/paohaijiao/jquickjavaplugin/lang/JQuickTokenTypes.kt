@@ -51,12 +51,22 @@ object JQuickTokenTypes {
     /** 逗号 ,。 */
     val COMMA: IElementType = IElementType("JQUICK_COMMA", JQuickLanguage)
 
-    /** 圆括号 ( )。 */
-    val PARENS: IElementType = IElementType("JQUICK_PARENS", JQuickLanguage)
+    // 括号需按“左/右”区分 IElementType，PairedBraceMatcher 才能识别配对并自动补右括号
+    /** 左圆括号 (。 */
+    val LPAREN: IElementType = IElementType("JQUICK_LPAREN", JQuickLanguage)
 
-    /** 花括号 { }。 */
-    val BRACES: IElementType = IElementType("JQUICK_BRACES", JQuickLanguage)
+    /** 右圆括号 )。 */
+    val RPAREN: IElementType = IElementType("JQUICK_RPAREN", JQuickLanguage)
 
-    /** 方括号 [ ]。 */
-    val BRACKETS: IElementType = IElementType("JQUICK_BRACKETS", JQuickLanguage)
+    /** 左花括号 {。 */
+    val LBRACE: IElementType = IElementType("JQUICK_LBRACE", JQuickLanguage)
+
+    /** 右花括号 }。 */
+    val RBRACE: IElementType = IElementType("JQUICK_RBRACE", JQuickLanguage)
+
+    /** 左方括号 [。 */
+    val LBRACKET: IElementType = IElementType("JQUICK_LBRACKET", JQuickLanguage)
+
+    /** 右方括号 ]。 */
+    val RBRACKET: IElementType = IElementType("JQUICK_RBRACKET", JQuickLanguage)
 }

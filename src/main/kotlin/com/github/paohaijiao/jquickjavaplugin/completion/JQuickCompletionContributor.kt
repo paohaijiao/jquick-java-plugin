@@ -60,7 +60,7 @@ class JQuickCompletionContributor : CompletionContributor() {
 private class JQuickCompletionProvider : CompletionProvider<CompletionParameters>() {
 
     override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
-        val element = parameters.position ?: return
+        val element = parameters.position
         val file = element.containingFile ?: return
         if (file.language != JQuickLanguage) return
         val type = PsiUtilCore.getElementType(element)

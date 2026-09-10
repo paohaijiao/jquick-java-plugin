@@ -34,9 +34,9 @@ class JQuickSyntaxHighlighter : SyntaxHighlighterBase() {
             JQuickTokenTypes.DOT -> DefaultLanguageHighlighterColors.DOT
             JQuickTokenTypes.SEMICOLON -> DefaultLanguageHighlighterColors.SEMICOLON
             JQuickTokenTypes.COMMA -> DefaultLanguageHighlighterColors.COMMA
-            JQuickTokenTypes.PARENS -> DefaultLanguageHighlighterColors.PARENTHESES
-            JQuickTokenTypes.BRACES -> DefaultLanguageHighlighterColors.BRACES
-            JQuickTokenTypes.BRACKETS -> DefaultLanguageHighlighterColors.BRACKETS
+            JQuickTokenTypes.LPAREN, JQuickTokenTypes.RPAREN -> DefaultLanguageHighlighterColors.PARENTHESES
+            JQuickTokenTypes.LBRACE, JQuickTokenTypes.RBRACE -> DefaultLanguageHighlighterColors.BRACES
+            JQuickTokenTypes.LBRACKET, JQuickTokenTypes.RBRACKET -> DefaultLanguageHighlighterColors.BRACKETS
             else -> null
         }
         return if (key == null) emptyArray() else arrayOf(key)
